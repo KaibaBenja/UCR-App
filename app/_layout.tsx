@@ -1,9 +1,13 @@
-import { Text, View } from "react-native";
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { View } from "react-native";
+import { Slot } from "expo-router";
 
 export default function layout() {
   return (
-    <View className="flex-1 bg-blue-600">
-      <Text className="font-bold">Hola</Text>
-    </View>
+    <GluestackUIProvider>
+      <View className="flex-1 items-center justify-center">
+        <Slot />
+      </View>
+    </GluestackUIProvider>
   );
 }
