@@ -4,9 +4,9 @@
     "slug": "ucr-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/urrs.png",
+    "icon": "./assets/ucr-logo.png",
     "userInterfaceStyle": "light",
-    "scheme": "ucrcrc",
+    "scheme": "ucrc",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
