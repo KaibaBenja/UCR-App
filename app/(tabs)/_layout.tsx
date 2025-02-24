@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import { View } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
@@ -40,7 +39,16 @@ export default function TabsLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="home" size={24} color={color} />
+            <MaterialIcons
+              name="home"
+              size={24}
+              color={color}
+              style={{
+                borderRadius: 40,
+                borderWidth: 1,
+                borderColor: "#dc2626",
+              }}
+            />
           ),
         }}
       />
@@ -49,7 +57,17 @@ export default function TabsLayout() {
         options={{
           title: "About",
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="question" size={24} color={color} />
+            <FontAwesome
+              name="question"
+              size={24}
+              color={color}
+              style={{
+                borderRadius: 40,
+                borderWidth: 1,
+                borderColor: "#dc2626",
+                paddingHorizontal: 5,
+              }}
+            />
           ),
         }}
       />

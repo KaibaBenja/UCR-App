@@ -1,34 +1,53 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, Text, Image, ScrollView, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+  FlatList,
+  TextInput,
+} from "react-native";
 import { VStack } from "../components/ui/vstack";
 import axios from "axios";
 import HeaderOut from "@/components/layout/header-out";
 
 interface NewsDetailProps {
+  id: number;
   title: string;
+  body: string;
   description: string;
-  creator: string | null;
-  image_url: string | null;
-  pubDate: string;
+  href: string;
+  author: {
+    name: string;
+  } | null;
+  image: string | null;
+  published_at: string;
 }
 
 export default function NewsDetail() {
   const { id } = useLocalSearchParams();
   const [news, setNews] = useState<NewsDetailProps | null>(null);
   const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState(false);
+  const [comment, setComment] = useState(""); // Estado para el comentario
+  const [comments, setComments] = useState<string[]>([]);
+  const MAX_LENGTH = 500;
 
   useEffect(() => {
     const fetchNewsDetail = async () => {
       try {
         const response = await axios.get(
-          "https://newsdata.io/api/1/news?apikey=pub_536246cd15345c373d46e2bfbc8a06ae3fbc1&country=ar,gb,us&language=en,es",
+          "https://api.apitube.io/v1/news/everything?language.code=es&sort_by=published_at&sort_order=asc&api_key=api_live_9UjOou8RIHHXvohn2ObMvaoThX4ErO2IW1ISlOFhh6",
         );
+
         const foundNews = response.data.results.find(
-          (item: any) => item.article_id === id,
+          (item: any) => String(item.id) === String(id),
         );
+
         setNews(foundNews || null);
-        console.log(foundNews);
       } catch (error) {
         console.error("Error al obtener detalles de la noticia:", error);
       } finally {
@@ -51,6 +70,13 @@ export default function NewsDetail() {
     );
   }
 
+  const handleAddComment = () => {
+    if (comment.trim() !== "") {
+      setComments([...comments, comment]);
+      setComment(""); // Limpiar el input
+    }
+  };
+
   return (
     <ScrollView className="flex-1 bg-white p-4">
       <Stack.Screen
@@ -61,22 +87,66 @@ export default function NewsDetail() {
       />
       <Image
         source={{
-          uri: news.image_url
-            ? news.image_url
-            : "https://via.placeholder.com/300",
+          uri: news.image ? news.image : "https://via.placeholder.com/300",
         }}
+        alt="News"
         className="w-full h-48"
         resizeMode="cover"
       />
       <VStack className="p-4">
         <Text className="text-xl font-bold mb-2">{news.title}</Text>
         <Text className="text-sm text-gray-500 mb-1">
-          {news.creator ?? "Desconocido"}
+          {news.author?.name ?? "Desconocido"}
         </Text>
         <Text className="text-sm text-gray-500 mb-2">
-          {new Date(news.pubDate).toLocaleDateString()}
+          {new Date(news.published_at).toLocaleDateString()}
         </Text>
-        <Text className="text-sm text-gray-600">{news.description}</Text>
+        <Text>
+          {expanded || news.body.length <= MAX_LENGTH
+            ? news.body
+            : news.body.slice(0, MAX_LENGTH) + "..."}
+        </Text>
+
+        {news.body.length > MAX_LENGTH && (
+          <TouchableOpacity>
+            <Text
+              className="text-blue-500"
+              onPress={() => setExpanded(!expanded)}
+            >
+              {expanded ? "Ver menos" : "Leer más..."}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </VStack>
+      <VStack className="p-4 border-t border-gray-300 mt-4">
+        <Text className="text-lg font-semibold mb-2">Comentarios</Text>
+
+        {/* Input para escribir un comentario */}
+        <TextInput
+          className="border border-gray-300 rounded-lg p-2 mb-2"
+          placeholder="Escribe un comentario..."
+          value={comment}
+          onChangeText={setComment}
+        />
+
+        {/* Botón para agregar comentario */}
+        <TouchableOpacity
+          className="bg-blue-500 p-2 rounded-lg mb-2"
+          onPress={handleAddComment}
+        >
+          <Text className="text-white text-center">Enviar</Text>
+        </TouchableOpacity>
+
+        {/* Lista de comentarios */}
+        <FlatList
+          data={comments}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View className="bg-gray-100 p-2 rounded-lg  mb-2">
+              <Text className="text-gray-700">{item}</Text>
+            </View>
+          )}
+        />
       </VStack>
     </ScrollView>
   );
