@@ -20,8 +20,8 @@
     "@gluestack-ui/toast": "^1.0.8",
     "@legendapp/motion": "^2.4.0",
     "axios": "^1.7.9",
-    "expo": "~52.0.33",
-    "expo-constants": "~17.0.5",
+    "expo": "~52.0.36",
+    "expo-constants": "~17.0.7",
     "expo-linking": "~7.0.5",
     "expo-router": "~4.0.17",
     "expo-status-bar": "~2.0.1",
@@ -31,7 +31,7 @@
     "react-native-reanimated": "3.16.2",
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",
-    "react-native-svg": "^15.11.1"
+    "react-native-svg": "15.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

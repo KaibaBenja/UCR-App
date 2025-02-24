@@ -1,40 +1,34 @@
 import { Link } from "expo-router";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 
 import React, { useEffect, useState } from "react";
-import { Box } from "./ui/box";
 import { Image } from "./ui/image";
 import { VStack } from "./ui/vstack";
 import axios from "axios";
 interface NewsCardProps {
-  article_id: string;
+  id: string;
   title: string;
   description: string;
   creator: string;
-  image_url: string;
-  pubDate: string;
+  image: string;
+  published_at: string;
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({
-  article_id,
+  id,
   title,
   description,
   creator,
-  image_url,
-  pubDate,
+  image,
+  published_at,
 }) => (
-  <Link href={`../${article_id}`} className="mb-4">
+  <Link href={`../${id}`} className="mb-4">
     <View className="bg-white rounded-lg shadow-md overflow-hidden mb-4 w-full">
       <Image
-        source={image_url ? image_url : "https://via.placeholder.com/300"}
+        source={image ? image : "https://via.placeholder.com/300"}
         className="w-full h-48"
         resizeMode="cover"
+        alt="News"
       />
       <VStack className="p-4">
         <Text className="text-lg font-bold mb-2">{title}</Text>
@@ -42,7 +36,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
           {creator ?? "Desconocido"}
         </Text>
         <Text className="text-sm text-gray-500 mb-2">
-          {new Date(pubDate).toLocaleDateString()}
+          {new Date(published_at).toLocaleDateString()}
         </Text>
         <Text className="text-sm text-gray-600">{description}</Text>
       </VStack>
@@ -57,7 +51,7 @@ export default function Main() {
     const fetchNews = async () => {
       try {
         const response = await axios.get(
-          "https://newsdata.io/api/1/news?apikey=pub_536246cd15345c373d46e2bfbc8a06ae3fbc1&country=ar,gb,us&language=en,es",
+          "https://api.apitube.io/v1/news/everything?language.code=es&sort_by=published_at&sort_order=asc&api_key=api_live_9UjOou8RIHHXvohn2ObMvaoThX4ErO2IW1ISlOFhh6",
         );
         setNews(response.data.results);
         console.log("Noticias:", response.data.results);
@@ -79,7 +73,7 @@ export default function Main() {
         <FlatList
           data={news}
           renderItem={({ item }) => <NewsCard {...item} />}
-          keyExtractor={(item) => item.article_id.toString()}
+          keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
         />
