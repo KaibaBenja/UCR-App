@@ -1067,6 +1067,11 @@
     resolve-from "^5.0.0"
     semver "^7.6.0"
 
+"@expo/html-elements@0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@expo/html-elements/-/html-elements-0.4.2.tgz#4e9f6b9250af8d0befe3242fd42704cca2421e0e"
+  integrity sha512-lNioCgdtOrCMMqzHY+PCTdyuWBTU4yMBlOzPSkS4YFIWt9bq0zexM2ZJkpybTXmowNdE3zHO93xxAmiA2yDi2w==
+
 "@expo/image-utils@^0.6.5":
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/@expo/image-utils/-/image-utils-0.6.5.tgz#af25e9dd79d1168bebea91dc7f1e6f3efd28643c"
@@ -1288,6 +1293,13 @@
   integrity sha512-4rB4g+3hESy1bHSBG3tDFaMY2CH67iT7yne1e+0CLTsGLDcmoEWWpJjjpWVaYgYfYuohIRuo0E+N536gd2ZHZA==
   dependencies:
     tslib "2"
+
+"@gluestack-ui/avatar@^0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@gluestack-ui/avatar/-/avatar-0.1.18.tgz#bb890a7b889060e01faf549f59a47d11c04ada1c"
+  integrity sha512-VA9XwtavYLYCWrjxHc2u9gRpV97cPRcr/6KJ4tLiMiQbiRL1b4zckiL+/F39fB6xjUOUQHl3Fjo/Yd8swa0MBg==
+  dependencies:
+    "@gluestack-ui/utils" "^0.1.14"
 
 "@gluestack-ui/button@^1.0.8":
   version "1.0.8"

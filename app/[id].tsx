@@ -7,12 +7,14 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
-  FlatList,
   TextInput,
 } from "react-native";
 import { VStack } from "../components/ui/vstack";
 import axios from "axios";
 import HeaderOut from "@/components/layout/header-out";
+import { HStack } from "@/components/ui/hstack";
+import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
+import { Heading } from "@/components/ui/heading";
 
 interface NewsDetailProps {
   id: number;
@@ -138,15 +140,25 @@ export default function NewsDetail() {
         </TouchableOpacity>
 
         {/* Lista de comentarios */}
-        <FlatList
-          data={comments}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View className="bg-gray-100 p-2 rounded-lg  mb-2">
-              <Text className="text-gray-700">{item}</Text>
+        {comments.length > 0 ? (
+          comments.map((item, index) => (
+            <View key={index} className="bg-gray-100 p-2 rounded-lg mb-2">
+              <HStack space="md">
+                <Avatar className="bg-indigo-600">
+                  <AvatarFallbackText className="text-white">
+                    Ronald Richards
+                  </AvatarFallbackText>
+                </Avatar>
+                <VStack>
+                  <Heading size="sm">Ronald Richards</Heading>
+                  <Text className="text-gray-700">{item}</Text>
+                </VStack>
+              </HStack>
             </View>
-          )}
-        />
+          ))
+        ) : (
+          <Text className="text-gray-500">No hay comentarios aún.</Text>
+        )}
       </VStack>
     </ScrollView>
   );
