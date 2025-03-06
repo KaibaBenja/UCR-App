@@ -1,17 +1,10 @@
-import { Link, Stack } from "expo-router";
+import { Link } from "expo-router";
 import { Pressable, ScrollView, Text } from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import HeaderOut from "@/components/layout/header-out";
 
 export default function About() {
   return (
     <ScrollView>
-      <Stack.Screen
-        options={{
-          headerTitle: "About",
-          header: () => <HeaderOut title="About" />,
-        }}
-      />
       <Text className="text-2xl font-bold mb-8">Acerca de</Text>
       <Link asChild href="/" className="text-blue-400 text-2xl font-bold">
         <Pressable>

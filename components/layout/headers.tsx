@@ -1,6 +1,6 @@
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "../ui/image";
-import Logo from "../../assets/ucr-blanco-logo.png";
+import { LogoBlanco } from "@/assets/images";
 import Entypo from "@expo/vector-icons/Entypo";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { HStack } from "../ui/hstack";
@@ -13,16 +13,29 @@ import {
   DrawerHeader,
 } from "../ui/drawer";
 import { useState } from "react";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { signOut } from "firebase/auth";
+import { auth } from "@/config/firebaseConfig";
 
 export default function Header() {
   const [showDrawer, setShowDrawer] = useState(false);
   const insets = useSafeAreaInsets();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      Alert.alert("Sesión cerrada", "Has cerrado sesión correctamente.");
+      router.replace("/login"); // Redirigir al login
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      Alert.alert("Error", "Hubo un problema al cerrar sesión.");
+    }
+  };
   return (
     <View className="bg-red-600 px-4 w-full" style={{ paddingTop: insets.top }}>
       <HStack className="flex items-center justify-between ">
-        <Image source={Logo} className="size-6" />
+        <Image source={LogoBlanco} className="size-6" />
         <Text className="text-white font-bold text-2xl">Inicio</Text>
         <Pressable onPress={() => setShowDrawer(true)}>
           <MaterialIcons name="menu" size={30} color="white" />
@@ -59,9 +72,14 @@ export default function Header() {
                     Editar Perfil
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity className="flex-row items-center py-3 bg-rose-100 px-2 rounded-lg mt-2">
-                  <MaterialIcons name="flag-circle" size={24} color="red" />
-                  <Text className="ml-4 text-lg text-gray-800">Ayuda</Text>
+                <TouchableOpacity
+                  className="flex-row items-center py-3 bg-rose-100 px-2 rounded-lg mt-2"
+                  onPress={handleLogout}
+                >
+                  <MaterialIcons name="logout" size={24} color="red" />
+                  <Text className="ml-4 text-lg text-gray-800">
+                    Cerrar Sesión
+                  </Text>
                 </TouchableOpacity>
               </View>
             </DrawerBody>
