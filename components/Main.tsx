@@ -1,31 +1,31 @@
 import { Link } from "expo-router";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
-
 import React, { useEffect, useState } from "react";
 import { Image } from "./ui/image";
 import { VStack } from "./ui/vstack";
 import axios from "axios";
+
 interface NewsCardProps {
   id: string;
   title: string;
-  description: string;
+  summary: string;
   creator: string;
   image: string;
-  published_at: string;
+  published_date: string;
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({
   id,
   title,
-  description,
+  summary,
   creator,
   image,
-  published_at,
+  published_date,
 }) => (
   <Link href={`../${id}`} className="mb-4">
     <View className="bg-white rounded-lg shadow-md overflow-hidden mb-4 w-full">
       <Image
-        source={image ? image : "https://via.placeholder.com/300"}
+        source={image || "https://via.placeholder.com/300"}
         className="w-full h-48"
         resizeMode="cover"
         alt="News"
@@ -33,12 +33,12 @@ const NewsCard: React.FC<NewsCardProps> = ({
       <VStack className="p-4">
         <Text className="text-lg font-bold mb-2">{title}</Text>
         <Text className="text-sm text-gray-500 mb-1">
-          {creator ?? "Desconocido"}
+          {creator || "Desconocido"}
         </Text>
         <Text className="text-sm text-gray-500 mb-2">
-          {new Date(published_at).toLocaleDateString()}
+          {new Date(published_date).toLocaleDateString()}
         </Text>
-        <Text className="text-sm text-gray-600">{description}</Text>
+        <Text className="text-sm text-gray-600">{summary}</Text>
       </VStack>
     </View>
   </Link>
@@ -47,14 +47,24 @@ const NewsCard: React.FC<NewsCardProps> = ({
 export default function Main() {
   const [news, setNews] = useState<NewsCardProps[]>([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const response = await axios.get(
-          "https://api.apitube.io/v1/news/everything?language.code=es&sort_by=published_at&sort_order=asc&api_key=api_live_9UjOou8RIHHXvohn2ObMvaoThX4ErO2IW1ISlOFhh6",
+          "https://api.worldnewsapi.com/search-news?api-key=7c2f16bfcce34912bf9c6452727a097e&language=es",
         );
-        setNews(response.data.results);
-        console.log("Noticias:", response.data.results);
+
+        const mappedNews = response.data.news.map((item: any) => ({
+          id: item.id.toString(), // Convertimos id a string
+          title: item.title,
+          summary: item.summary || "No hay resumen disponible.",
+          creator: item.author || (item.authors?.join(", ") ?? "Desconocido"), // Si hay múltiples autores, los unimos
+          image: item.image || "https://via.placeholder.com/300", // Si no hay imagen, ponemos un placeholder
+          published_date: item.publish_date, // Mantenemos el nombre correcto
+        }));
+
+        setNews(mappedNews);
       } catch (error) {
         console.error("Error al obtener noticias:", error);
       } finally {
@@ -73,7 +83,7 @@ export default function Main() {
         <FlatList
           data={news}
           renderItem={({ item }) => <NewsCard {...item} />}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
         />

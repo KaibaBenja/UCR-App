@@ -1,12 +1,13 @@
 import { Tabs } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Header from "@/components/layout/headers";
+import HeaderOut from "@/components/layout/header-out";
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
         tabBarActiveTintColor: "#dc2626",
         tabBarInactiveTintColor: "#dc2626",
         tabBarStyle: {
@@ -38,6 +39,7 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Home",
+          header: () => <Header />,
           tabBarIcon: ({ color }) => (
             <MaterialIcons
               name="home"
@@ -55,7 +57,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="about"
         options={{
-          title: "About",
+          header: () => <HeaderOut title="About" />,
           tabBarIcon: ({ color }) => (
             <FontAwesome
               name="question"
