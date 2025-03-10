@@ -87,16 +87,13 @@ export default function NewsDetail() {
     });
 
     return () => unsubscribe();
-  }, [segments]);
-
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" className="mt-4" />;
-  }
+  }, [segments, publicRoutes]);
 
   if (!news && !loading) {
     return (
       <View className="flex-1 justify-center items-center">
-        <Text className="text-lg text-red-500">Noticia no encontrada {id}</Text>
+        <ActivityIndicator size="large" color="#0000ff" className="mt-4" />
+        <Text>Cargando...</Text>
       </View>
     );
   }
@@ -159,32 +156,34 @@ export default function NewsDetail() {
 
         {/* Botón para agregar comentario */}
         <TouchableOpacity
-          className="bg-blue-500 p-2 rounded-lg mb-2"
+          className="bg-blue-500 p-2 rounded-lg "
           onPress={handleAddComment}
         >
           <Text className="text-white text-center">Enviar</Text>
         </TouchableOpacity>
 
         {/* Lista de comentarios */}
-        {comments.length > 0 ? (
-          comments.map((item, index) => (
-            <View key={index} className="bg-gray-100 p-2 rounded-lg mb-2">
-              <HStack space="md">
-                <Avatar className="bg-indigo-600">
-                  <AvatarFallbackText className="text-white">
-                    Usuario
-                  </AvatarFallbackText>
-                </Avatar>
-                <VStack>
-                  <Heading size="sm">Usuario</Heading>
-                  <Text className="text-gray-700">{item}</Text>
-                </VStack>
-              </HStack>
-            </View>
-          ))
-        ) : (
-          <Text className="text-gray-500">No hay comentarios aún.</Text>
-        )}
+        <VStack className="pb-4">
+          {comments.length > 0 ? (
+            comments.map((item, index) => (
+              <View key={index} className="bg-gray-100 p-2 rounded-lg mb-2">
+                <HStack space="md">
+                  <Avatar className="bg-indigo-600">
+                    <AvatarFallbackText className="text-white">
+                      Usuario
+                    </AvatarFallbackText>
+                  </Avatar>
+                  <VStack>
+                    <Heading size="sm">Usuario</Heading>
+                    <Text className="text-gray-700">{item}</Text>
+                  </VStack>
+                </HStack>
+              </View>
+            ))
+          ) : (
+            <Text className="text-gray-500">No hay comentarios aún.</Text>
+          )}
+        </VStack>
       </VStack>
     </ScrollView>
   );
