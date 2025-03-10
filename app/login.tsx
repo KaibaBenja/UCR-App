@@ -13,12 +13,8 @@ import { Image } from "../components/ui/image";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useEffect, useState } from "react";
-import {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  User,
-} from "firebase/auth";
+import { useState } from "react";
+import { signInWithEmailAndPassword, User } from "firebase/auth";
 import { auth, db } from "@/config/firebaseConfig";
 import { Link, router, useSegments } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
@@ -82,10 +78,17 @@ export default function Login() {
       }
 
       const userData = userDoc.data();
-      Alert.alert("Inicio de sesión exitoso", `Bienvenido ${userData.nombre}`);
 
-      // Redirigir al usuario
-      router.replace("/");
+      if (userDoc.exists() && !userDoc.data()?.perfilCompleto) {
+        router.replace(`/completeProfile?uid=${user.uid}`);
+        Alert.alert("Necesitamos Validar tu identidad");
+      } else {
+        router.replace("/");
+        Alert.alert(
+          "Inicio de sesión exitoso",
+          `Bienvenido ${userData.nombre}`,
+        );
+      }
     } catch (error) {
       Alert.alert("Error", "Usuario o contraseña incorrectos");
       console.error(error);
@@ -98,17 +101,6 @@ export default function Login() {
   };
 
   const toggleEye = () => setEyePressed(!eyePressed);
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-
-      if (user) {
-        router.replace("/");
-      }
-    });
-
-    return () => unsubscribe();
-  }, [segments]);
 
   return (
     <KeyboardAvoidingView
